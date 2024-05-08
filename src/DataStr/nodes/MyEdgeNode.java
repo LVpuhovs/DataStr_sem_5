@@ -43,4 +43,8 @@ public class MyEdgeNode {
 		setIndexOfNeighbour(indexOfNeighbour);
 		setWeight(weight);
 	}
+	
+	public String tosString() {
+		return weight + " km";
+	}
 }
