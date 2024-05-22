@@ -4,7 +4,7 @@ public class MyVerticeNode<Ttype> {
 	
 	private Ttype element;
 	private MyEdgeNode firstEdgeNode = null;
-	
+	private boolean isVisited = false;
 	
 	public Ttype getElement() {
 		return element;
@@ -22,6 +22,12 @@ public class MyVerticeNode<Ttype> {
 		this.firstEdgeNode = firstEdgeNode;
 	}
 	
+	public boolean isVisited() {
+		return isVisited;
+	}
+	public void setVisited(boolean isVisited) {
+		this.isVisited = isVisited;
+	}
 	public MyVerticeNode(Ttype element){
 		setElement(element);
 	}
