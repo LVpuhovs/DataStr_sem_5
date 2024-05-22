@@ -1,6 +1,7 @@
 package DataStr;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import DataStr.nodes.MyEdgeNode;
 import DataStr.nodes.MyVerticeNode;
@@ -122,5 +123,75 @@ public class MyGraph<Ttype> {
 		}
 	}
 	
-	//MainService izveidot karti ar vismaz 4 pilsetam un 6 celiem
+	private ArrayList<MyVerticeNode> getNeighbours(Ttype element) throws Exception{
+		if(element == null || vertices == null) throw new Exception("No Elements");
+		int indexOfElement = addVerticeHelp(element);
+		if(indexOfElement == -1) throw new Exception("No vertices");
+		
+		ArrayList<MyVerticeNode> result = new ArrayList<MyVerticeNode>();
+		MyVerticeNode verticeNode = vertices[indexOfElement];
+		
+		MyEdgeNode tempE = verticeNode.getFirstEdgeNode();
+		
+		while(tempE != null) {
+			int indexOf = tempE.getIndexOfNeighbour();
+			MyVerticeNode verticeNodeOfNeighbour = vertices[indexOf];
+			result.add(verticeNodeOfNeighbour);
+			
+			//isais variants
+			//result.add(vertices[tempE.getIndexOfNeighbour()]);
+			tempE = tempE.getNext();
+		}
+		
+		return result;
+	}
+	
+	private void clearVisited() throws Exception {
+		if(isEmpty()) throw new Exception("Graph is empty");
+		
+		for(int i = 0; i < counter; i++) {
+			vertices[i].setVisited(false);
+		}
+	}
+	
+	public ArrayList<Ttype> searchPathByDepth(Ttype elementFrom, Ttype elementTo) throws Exception {
+		if(isEmpty()) throw new Exception("Graph is empty");
+		int indexFrom = addVerticeHelp(elementFrom);
+		int indexTo = addVerticeHelp(elementTo);
+		
+		if(indexFrom == -1 || indexTo == -1) {
+			throw new Exception("One or both vertices are not in the graph");
+		}
+		
+		clearVisited();
+		ArrayList<Ttype> result = new ArrayList<Ttype>();
+		
+		boolean isFound = false;
+		
+		Stack<MyVerticeNode> stack = new Stack<MyVerticeNode>();
+		MyVerticeNode verticeNodeFrom = vertices[addVerticeHelp(elementFrom)];
+		stack.push(verticeNodeFrom);
+		do {
+			MyVerticeNode tempVNode = stack.pop();
+			if(tempVNode.getElement().equals(elementTo)) {
+				result.add((Ttype) tempVNode.getElement());
+				isFound = true;
+			}else {
+				result.add((Ttype) tempVNode.getElement());
+				ArrayList<MyVerticeNode> neighbours = getNeighbours((Ttype) tempVNode.getElement());
+				
+				for(MyVerticeNode tempNNode: neighbours) {
+					if(!tempNNode.isVisited()) {
+						stack.push(tempNNode);
+					}
+				}
+			}
+		}while(!stack.isEmpty() && isFound);
+		
+		if(!isFound) {
+			throw new Exception("Path from " + elementFrom + " to " + elementTo + " does not exists");
+		}
+		
+		return result;
+	}
 }
