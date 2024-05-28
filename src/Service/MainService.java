@@ -29,8 +29,17 @@ public class MainService {
 			ArrayList<String> path1 = map.searchPathByDepth("Ventspils", "Kuldīga");
 			for(String tempS: path1) {
 				System.out.print(tempS + "->");
-			}
+			}System.out.println();
 			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			
+		}
+		try {
+			System.out.println("------------MINIMUM SPANNING TREE-----------");
+			map.minimumSpanningTree("Ventspils");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

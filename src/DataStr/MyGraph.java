@@ -1,6 +1,7 @@
 package DataStr;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Stack;
 
 import DataStr.nodes.MyEdgeNode;
@@ -155,13 +156,13 @@ public class MyGraph<Ttype> {
 	}
 	
 	public ArrayList<Ttype> searchPathByDepth(Ttype elementFrom, Ttype elementTo) throws Exception {
-		if(isEmpty()) throw new Exception("Graph is empty");
+		if(isEmpty())  throw new Exception("Graph is empty");
 		int indexFrom = addVerticeHelp(elementFrom);
 		int indexTo = addVerticeHelp(elementTo);
 		
-		if(indexFrom == -1 || indexTo == -1) {
+		if(indexFrom == -1 || indexTo == -1)
 			throw new Exception("One or both vertices are not in the graph");
-		}
+		
 		
 		clearVisited();
 		ArrayList<Ttype> result = new ArrayList<Ttype>();
@@ -169,29 +170,94 @@ public class MyGraph<Ttype> {
 		boolean isFound = false;
 		
 		Stack<MyVerticeNode> stack = new Stack<MyVerticeNode>();
+		
 		MyVerticeNode verticeNodeFrom = vertices[addVerticeHelp(elementFrom)];
 		stack.push(verticeNodeFrom);
-		do {
+		
+		do
+		{
 			MyVerticeNode tempVNode = stack.pop();
+			tempVNode.setVisited(true);
 			if(tempVNode.getElement().equals(elementTo)) {
 				result.add((Ttype) tempVNode.getElement());
 				isFound = true;
-			}else {
-				result.add((Ttype) tempVNode.getElement());
-				ArrayList<MyVerticeNode> neighbours = getNeighbours((Ttype) tempVNode.getElement());
 				
-				for(MyVerticeNode tempNNode: neighbours) {
-					if(!tempNNode.isVisited()) {
+			}
+			else
+			{
+				result.add((Ttype) tempVNode.getElement());
+				ArrayList<MyVerticeNode> neighbours = getNeighbours((Ttype)tempVNode.getElement());
+				
+				for(MyVerticeNode tempNNode:neighbours)
+				{
+					if(!tempNNode.isVisited())
+					{
 						stack.push(tempNNode);
 					}
 				}
 			}
-		}while(!stack.isEmpty() && isFound);
+	
+		}while(!stack.isEmpty() && !isFound);
+
 		
-		if(!isFound) {
-			throw new Exception("Path from " + elementFrom + " to " + elementTo + " does not exists");
-		}
+		if(!isFound) 
+			throw new Exception("Path from " + elementFrom + " to " + elementTo + " doesn't exist");
+		
 		
 		return result;
+	
 	}
+	
+	public void minimumSpanningTree(Ttype startElement) throws Exception {
+		if(isEmpty())  throw new Exception("Graph is empty");
+		if (startElement == null) throw new Exception("Start element should be not null");
+		int indexOfStartedElement = addVerticeHelp(startElement);
+		if (indexOfStartedElement == -1) throw new Exception("Start element is not found in the graph");
+		
+		clearVisited();
+		
+		PriorityQueue<MyEdgeNode> edges = new PriorityQueue<>();
+		ArrayList<MyEdgeNode> leaveEdges = new ArrayList<>();
+		
+		vertices[indexOfStartedElement].setVisited(true);
+		
+		MyEdgeNode tempE = vertices[indexOfStartedElement].getFirstEdgeNode();
+		
+		while(tempE!=null)
+		{
+			edges.add(tempE);
+			tempE = tempE.getNext();
+		}
+		
+		while(!edges.isEmpty())
+		{
+			MyEdgeNode shortestEdge = edges.poll();
+			MyVerticeNode tempN = vertices[shortestEdge.getIndexOfNeighbour()];
+			if(!tempN.isVisited())
+			{
+				leaveEdges.add(shortestEdge);
+				vertices[shortestEdge.getIndexOfNeighbour()].setVisited(true);
+				
+				
+				tempE = vertices[shortestEdge.getIndexOfNeighbour()].getFirstEdgeNode();
+				
+				while(tempE!=null) {
+					
+					if(!vertices[tempE.getIndexOfNeighbour()].isVisited())
+						edges.add(tempE);
+						
+					tempE = tempE.getNext();	
+				}
+				
+				
+			}
+	
+		}
+		
+		for(MyEdgeNode tempEE: leaveEdges) {
+			System.out.println(tempEE);
+		}
+		
+	}
+	
 }

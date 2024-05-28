@@ -1,6 +1,6 @@
 package DataStr.nodes;
 
-public class MyEdgeNode {
+public class MyEdgeNode implements Comparable<MyEdgeNode>{
 	
 	private int indexOfNeighbour;
 	private float weight;//TODO var izveidot celu klasi ar vairakiem parametriem
@@ -46,5 +46,10 @@ public class MyEdgeNode {
 	
 	public String tosString() {
 		return weight + " km";
+	}
+	@Override
+	public int compareTo(MyEdgeNode arg0) {
+		if (weight > arg0.getWeight()) return 1;
+		else return -1;
 	}
 }
